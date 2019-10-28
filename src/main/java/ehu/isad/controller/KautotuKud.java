@@ -17,8 +17,6 @@ public class KautotuKud implements Initializable {
   // Reference to the main application.
   private Main mainApp;
 
-  @FXML
-  private ComboBox comboZerbitzua;
 
   @FXML
   private TextField txtErabiltzaile;
@@ -33,19 +31,13 @@ public class KautotuKud implements Initializable {
   @FXML
   public void onClick(ActionEvent actionEvent) {
     System.out.println(txtErabiltzaile.getText() + ":" + txtPasahitza.getText());
-    System.out.println(comboZerbitzua.getValue());
 
-    if ("Flickr".equals(comboZerbitzua.getValue()) &&
-        "juanan".equals(txtErabiltzaile.getText()) &&
-        "pereira".equals(txtPasahitza.getText())) {
 
-      mainApp.mainErakutsi();
-    }
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    comboZerbitzua.getItems().add(0,"Dropbox");
+
   }
 
 }
