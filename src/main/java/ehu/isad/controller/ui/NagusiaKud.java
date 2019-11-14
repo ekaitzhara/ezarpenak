@@ -24,7 +24,7 @@ public class NagusiaKud implements Initializable {
 
   @FXML
   public void onClick(ActionEvent actionEvent) {
-    this.mainApp.ezarpenakErakutsi();
+    //this.mainApp.ezarpenakErakutsi();
   }
 
   @Override

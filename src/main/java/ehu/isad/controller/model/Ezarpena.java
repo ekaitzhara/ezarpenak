@@ -1,5 +1,7 @@
 package ehu.isad.controller.model;
 
+import javafx.scene.image.Image;
+
 public class Ezarpena {
 
     private Integer userId;
@@ -16,15 +18,15 @@ public class Ezarpena {
         return userId;
     }
 
+
     public String getKey() {
         return key;
     }
 
+
     public String getValue() {
         return value;
     }
-
-
 
     @Override
     public String toString() {
