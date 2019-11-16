@@ -93,4 +93,10 @@ public class Main extends Application {
       stage.setScene(new Scene(bozkatuUI));
       stage.show();
   }
+
+  public void top3PantailaErakusti() {
+    top3Kud.jarriDatuak();
+    stage.setScene(new Scene(top3UI));
+    stage.show();
+  }
 }

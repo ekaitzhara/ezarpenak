@@ -11,10 +11,10 @@
       <Label fx:id="goiTestua" text="\%herrialdeak horrela nahi ditu bere puntuak banatu" BorderPane.alignment="CENTER" />
    </top>
    <bottom>
-      <Button mnemonicParsing="false" onAction="#onClick" text="Bozkaketa gorde" BorderPane.alignment="CENTER" />
+      <Button fx:id="bozkatuBotoia" mnemonicParsing="false" onAction="#onClick" text="Bozkaketa gorde" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tbData" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn fx:id="bandera" prefWidth="46.0" />
           <TableColumn fx:id="herrialdea" prefWidth="158.0" text="Herrialdea" />

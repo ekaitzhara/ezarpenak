@@ -1,6 +1,7 @@
 package ehu.isad.controller.ui;
 
 import ehu.isad.Main;
+import ehu.isad.controller.db.BozkaketaDBKud;
 import ehu.isad.controller.db.OrdezkaritzaDBKud;
 import ehu.isad.controller.model.Artista;
 import ehu.isad.controller.model.BozkatzekoDatuak;
@@ -18,6 +19,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
 import java.util.List;
@@ -30,6 +32,7 @@ public class BozkatuKud implements Initializable {
 
     @FXML
     private TableView<BozkatzekoDatuak> tbData;
+
     @FXML
     private TableColumn<BozkatzekoDatuak, String> herrialdea;
 
@@ -48,12 +51,15 @@ public class BozkatuKud implements Initializable {
     @FXML
     private Label goiTestua = new Label();
 
+    @FXML
+    private Button bozkatuBotoia;
+
     private static String zeinHerrialdeaNaiz;
 
     // add your data here from any source
     private ObservableList<BozkatzekoDatuak> taulaModels = FXCollections.observableArrayList(
             OrdezkaritzaDBKud.getInstantzia().emanBozkatzekoDatuak()
-    );;
+    );
 
 
     public void setMainApp(Main main) {
@@ -63,19 +69,36 @@ public class BozkatuKud implements Initializable {
     @FXML
     public void onClick(ActionEvent actionEvent) {
         // Bozkaketa gorde behar da
-        this.mainApp.herrialdeHautatuErakutsi();
+        // 5 puntu dira banatzeko, lehenengo 5ak hartu eta gorde
+        // ez dakit insert-a eta update-a, biak, egin behar diren
+
+        int totalPunt = 5;
+
+        for (int i = 0; i < tbData.getItems().size(); i++) {
+            BozkatzekoDatuak datuak = tbData.getItems().get(i);
+            if (datuak.getPuntuak() != 0 && totalPunt != 0) {
+                System.out.println(datuak.getPuntuak());
+
+                BozkaketaDBKud.getInstantzia().bozkaketaBerria(zeinHerrialdeaNaiz, datuak.getHerrialdea(), datuak.getPuntuak());
+                OrdezkaritzaDBKud.getInstantzia().botoakEguneratu(datuak.getHerrialdea(), datuak.getPuntuak());
+                totalPunt = totalPunt - datuak.getPuntuak();
+            }
+        }
+        this.mainApp.top3PantailaErakusti();
+
     }
 
 
     public void jarriZeinHerrialdeaNaiz(String herrialde) {
+
         zeinHerrialdeaNaiz = herrialde;
+
+        this.goiTestua.setText(zeinHerrialdeaNaiz + "k horrela nahi ditu bere puntuak banatu:");
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        this.goiTestua.setText(zeinHerrialdeaNaiz + "k horrela nahi ditu bere puntuak banatu:");
 
         tbData.setEditable(true);
         //make sure the property value factory should be exactly same as the e.g getStudentId from your model class
@@ -85,11 +108,16 @@ public class BozkatuKud implements Initializable {
         puntuak.setCellValueFactory(new PropertyValueFactory<>("puntuak"));
 
 
-        Callback<TableColumn<BozkatzekoDatuak, String>, TableCell<BozkatzekoDatuak, String>> defaultTextFieldCellFactory
-                = TextFieldTableCell.<BozkatzekoDatuak>forTableColumn();
+        // Callback<TableColumn<BozkatzekoDatuak, String>, TableCell<BozkatzekoDatuak, String>> defaultTextFieldCellFactory
+        //        = TextFieldTableCell.<BozkatzekoDatuak>forTableColumn();
+
+        Callback<TableColumn<BozkatzekoDatuak, Integer>, TableCell<BozkatzekoDatuak, Integer>> defaultTextFieldCellFactory
+                = TextFieldTableCell.<BozkatzekoDatuak, Integer>forTableColumn(new IntegerStringConverter());
+
+        //puntuak.setCellFactory(TextFieldTableCell.<BozkatzekoDatuak, Integer>forTableColumn(new IntegerStringConverter()));
 
         puntuak.setCellFactory(col -> {
-            TableCell<BozkatzekoDatuak, String> cell = defaultTextFieldCellFactory.call(col);
+            TableCell<BozkatzekoDatuak, Integer> cell = defaultTextFieldCellFactory.call(col);
             cell.itemProperty().addListener((obs, oldValue, newValue) -> {
                 TableRow row = cell.getTableRow();
                 if (row == null) {
@@ -100,7 +128,6 @@ public class BozkatuKud implements Initializable {
                         cell.setEditable(false);
                     } else {
                         cell.setEditable(!item.getHerrialdea().equals(zeinHerrialdeaNaiz));
-                        cell.setItem("--");
                     }
                 }
             });
@@ -108,14 +135,22 @@ public class BozkatuKud implements Initializable {
         });
 
 
-        bandera.setCellValueFactory(new PropertyValueFactory<BozkatzekoDatuak, Image>("image"));
+        puntuak.setOnEditCommit(
+                t -> t.getTableView().getItems().get(t.getTablePosition().getRow())
+                        .setPuntuak(t.getNewValue())
+        );
+
+
+
+
+        bandera.setCellValueFactory(new PropertyValueFactory<BozkatzekoDatuak, Image>("banderaImage"));
 
         bandera.setCellFactory(p -> new TableCell<>() {
             public void updateItem(Image image, boolean empty) {
                 if (image != null && !empty){
                     final ImageView imageview = new ImageView();
-                    imageview.setFitHeight(10);
-                    imageview.setFitWidth(10);
+                    imageview.setFitHeight(25);
+                    imageview.setFitWidth(25);
                     imageview.setImage(image);
                     setGraphic(imageview);
                     setAlignment(Pos.CENTER);
@@ -126,6 +161,9 @@ public class BozkatuKud implements Initializable {
                 }
             };
         });
+
+        //add your data to the table here.
+        tbData.setItems(taulaModels);
 
     }
 

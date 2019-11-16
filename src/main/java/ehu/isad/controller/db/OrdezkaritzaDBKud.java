@@ -30,7 +30,7 @@ public class OrdezkaritzaDBKud {
 
         try {
             while (rs.next()) {
-                String bandera = rs.getString("bandera");
+                String bandera = rs.getString("bandera") + ".png";
                 String herrialdea = rs.getString("izena");
                 String artista = rs.getString("artista");
                 String abestia = rs.getString("abestia");
@@ -48,12 +48,12 @@ public class OrdezkaritzaDBKud {
     public void botoakEguneratu(String botoLortuHerrialde, int puntuKop) {
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
-        String query = "UPDATE Ordezkaritza SET puntuak=puntuak+"+puntuKop+" WHERE herrialdea="+botoLortuHerrialde+" AND urtea=YEAR(NOW());";
+        String query = "UPDATE Ordezkaritza SET puntuak=puntuak + '"+ puntuKop +"' WHERE herrialdea='"+ botoLortuHerrialde +"' AND urtea=YEAR(NOW());";
         dbKud.execSQL(query);
     }
 
-    public List<List<String>> emanTop3() {
-        List<List<String>> emaitza = new ArrayList<List<String>>();
+    public List<BozkatzekoDatuak> emanTop3() {
+        List<BozkatzekoDatuak> emaitza = new ArrayList<>();
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
         String query = "SELECT h.bandera, o.herrialdea, o.puntuak FROM Herrialde h, Ordezkaritza o WHERE h.izena=o.herrialdea AND o.urtea=YEAR(NOW())" +
@@ -62,16 +62,11 @@ public class OrdezkaritzaDBKud {
 
         try {
             while (rs.next()) {
-                String bandera = rs.getString("bandera");
+                String bandera = rs.getString("bandera") + ".png";
                 String herrialdea = rs.getString("herrialdea");
-                String puntuak = rs.getString("puntuak");
+                int puntuak = rs.getInt("puntuak");
 
-                List<String> datuak = new ArrayList<>();
-                datuak.add(bandera);
-                datuak.add(herrialdea);
-                datuak.add(puntuak);
-
-                emaitza.add(datuak);
+                emaitza.add(new BozkatzekoDatuak(bandera, herrialdea, puntuak));
             }
         } catch (SQLException e) {
             System.err.println(e);
