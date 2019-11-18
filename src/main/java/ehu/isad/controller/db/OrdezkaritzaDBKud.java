@@ -25,7 +25,7 @@ public class OrdezkaritzaDBKud {
         List<BozkatzekoDatuak> emaitza = new ArrayList<>();
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
-        String query = "SELECT h.bandera, h.izena, o.artista, o.abestia FROM Herrialde h, Ordezkaritza o WHERE h.izena=o.herrialdea AND o.urtea=YEAR(NOW());";
+        String query = "SELECT h.bandera, h.izena, o.artista, o.abestia FROM Herrialde h, Ordezkaritza o WHERE h.izena=o.herrialdea AND o.urtea=strftime('%Y','now')";
         ResultSet rs = dbKud.execSQL(query);
 
         try {

@@ -26,7 +26,7 @@ public class ParteHartzeaDBKud {
         List<Herrialde> emaitza = new ArrayList<>();
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
-        String query = "SELECT izena FROM ParteHartzea WHERE etorrikoDa='bai' AND urtea=YEAR(NOW());";
+        String query = "SELECT izena FROM ParteHartzea WHERE etorrikoDa='BAI' AND urtea=strftime('%Y','now')";
         ResultSet rs = dbKud.execSQL(query);
 
         try {

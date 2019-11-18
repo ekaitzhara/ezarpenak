@@ -22,7 +22,7 @@ public class BozkaketaDBKud {
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
         ResultSet rs=null;
-        String query = "SELECT * FROM Bozkaketa WHERE bozkatuDu='" + herrialdea + "' AND urtea=YEAR(NOW());";
+        String query = "SELECT * FROM Bozkaketa WHERE bozkatuDu='" + herrialdea + "' AND urtea=strftime('%Y','now')";
         rs = dbKud.execSQL(query);
 
         try {
