@@ -48,7 +48,7 @@ public class OrdezkaritzaDBKud {
     public void botoakEguneratu(String botoLortuHerrialde, int puntuKop) {
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
-        String query = "UPDATE Ordezkaritza SET puntuak=puntuak + '"+ puntuKop +"' WHERE herrialdea='"+ botoLortuHerrialde +"' AND urtea=YEAR(NOW());";
+        String query = "UPDATE Ordezkaritza SET puntuak=puntuak + '"+ puntuKop +"' WHERE herrialdea='"+ botoLortuHerrialde +"' AND urtea=strftime('%Y','now')";
         dbKud.execSQL(query);
     }
 
@@ -56,8 +56,8 @@ public class OrdezkaritzaDBKud {
         List<BozkatzekoDatuak> emaitza = new ArrayList<>();
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
-        String query = "SELECT h.bandera, o.herrialdea, o.puntuak FROM Herrialde h, Ordezkaritza o WHERE h.izena=o.herrialdea AND o.urtea=YEAR(NOW())" +
-                "ORDER BY puntuak DESC LIMIT 3;";
+        String query = "SELECT h.bandera, o.herrialdea, o.puntuak FROM Herrialde h, Ordezkaritza o WHERE h.izena=o.herrialdea AND o.urtea=strftime('%Y','now')" +
+                "ORDER BY puntuak DESC LIMIT 3";
         ResultSet rs = dbKud.execSQL(query);
 
         try {

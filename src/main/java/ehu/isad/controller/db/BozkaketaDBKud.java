@@ -37,7 +37,7 @@ public class BozkaketaDBKud {
 
         DBKudeatzaile dbKud = DBKudeatzaile.getInstantzia();
         String query = "INSERT INTO Bozkaketa SET bozkatuDu='" + botoEmanHerrialde + "', bozkatuaIzanDa='" + botoLortuHerrialde +
-                "', puntuak='" + puntuKop +"', urtea=YEAR(NOW());";
+                "', puntuak='" + puntuKop +"', urtea=strftime('%Y','now')";
         dbKud.execSQL(query);
 
     }
